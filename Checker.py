@@ -6,6 +6,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import re
 import socket
 import time
+import os
 
 SERVERS_FILE = "servers.txt"
 OUTPUT_FILE = Path("results/hasil.txt")
@@ -15,6 +16,7 @@ RETRY_CONN = 3
 RETRY_PING = 3
 RETRY_IP = 2
 TIMEOUT_CONN = 20
+CORE_PATH = "./cores/mihomo"  # gunakan MiHoYo Core
 
 def fetch_servers_from_url(url):
     try:
@@ -63,11 +65,10 @@ def average_ping(ip):
 def test_server(server):
     for attempt in range(RETRY_CONN):
         try:
-            cmd = ["./cores/clash_meta", "-d", ".", "--try-test", server]
+            cmd = [CORE_PATH, "-d", ".", "--try-test", server]
             proc = subprocess.run(cmd, capture_output=True, text=True, timeout=TIMEOUT_CONN)
 
             if proc.returncode == 0:
-                # server OK
                 host = get_host_port(server)
                 ping_ms = "N/A"
                 country = "N/A"
@@ -79,9 +80,9 @@ def test_server(server):
                     except:
                         pass
                 return f"{server} | OK ✅ | {ping_ms} | {country}"
-        except Exception as e:
+        except Exception:
             continue
-    return None  # dianggap FAIL setelah retry
+    return None  # gagal semua percobaan
 
 # Ambil semua server dari sub-url
 servers = []
@@ -98,7 +99,7 @@ with ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
     future_to_server = {executor.submit(test_server, server): server for server in servers}
     for future in as_completed(future_to_server):
         res = future.result()
-        if res:  # hanya server aktif
+        if res:
             print(res)
             results.append(res)
 
