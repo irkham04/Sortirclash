@@ -1,7 +1,8 @@
-name: Run Accurate Server Checker
+name: Run Accurate Server Checker (MiHoYo Core)
 
 on:
-  workflow_dispatch:  # Bisa dijalankan manual
+  workflow_dispatch:
+    # Jalankan manual
   schedule:
     - cron: '0 */6 * * *'  # Opsional: otomatis tiap 6 jam
 
@@ -10,36 +11,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout repo
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      # 2. Setup Clash Core
-      - name: Setup Clash Core
+      - name: Setup MiHoYo Core
         run: |
           mkdir -p cores
-          wget -O cores/clash_meta.gz https://github.com/Dreamacro/clash/releases/download/v1.22.0/clash-linux-amd64-v1.22.0.gz
-          gunzip -f cores/clash_meta.gz
-          chmod +x cores/clash_meta
+          wget -O cores/mihomo.gz https://github.com/MetaCubeX/mihomo/releases/download/v1.19.13/mihomo-linux-amd64-compatible-v1.19.13.gz
+          gunzip -f cores/mihomo.gz
+          chmod +x cores/mihomo
 
-      # 3. Setup Python
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
 
-      # 4. Install dependencies
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install requests
 
-      # 5. Run checker.py
       - name: Run accurate checker
         run: |
           python checker.py
 
-      # 6. Upload hasil server aktif (gunakan v4)
       - name: Upload active servers
         uses: actions/upload-artifact@v4
         with:
