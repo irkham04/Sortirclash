@@ -72,10 +72,11 @@ def main():
             except Exception as e:
                 print(f"[FAIL] {acc}: {e}")
 
-    # simpan akun aktif
-    with open(OUTPUT_FILE, "w") as f:
-        for acc in aktif_accounts:
-            f.write(acc + "\n")
+# Simpan akun aktif
+with open(OUTPUT_FILE, "w") as f:
+    for acc in aktif_accounts:
+        f.write(acc + "\n")
+print(f"[+] Akun aktif tersimpan di {OUTPUT_FILE}: {len(aktif_accounts)} akun")
 
     print(f"[+] Akun aktif tersimpan di {OUTPUT_FILE}: {len(aktif_accounts)} akun")
 
