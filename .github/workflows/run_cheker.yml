@@ -7,7 +7,7 @@ jobs:
   sort:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -19,6 +19,9 @@ jobs:
 
       - name: Run VPN Sorter
         run: python sorter_vpn.py
+
+      - name: List files for debug
+        run: ls -l
 
       - name: Upload akun aktif
         uses: actions/upload-artifact@v4
