@@ -1,10 +1,9 @@
-name: Run Accurate Server Checker (Xray Core)
+name: Run Accurate Server Checker (Xray Core v25)
 
 on:
   workflow_dispatch:
-    # Jalankan manual
   schedule:
-    - cron: '0 */6 * * *'  # Opsional: otomatis tiap 6 jam
+    - cron: '0 */6 * * *'  # opsional otomatis tiap 6 jam
 
 jobs:
   check:
@@ -14,10 +13,10 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Setup Xray Core
+      - name: Setup Xray Core v25.9.5
         run: |
           mkdir -p cores
-          wget -O cores/xray.zip https://github.com/XTLS/Xray-core/releases/download/v1.9.6/Xray-linux-64.zip
+          wget -O cores/xray.zip https://github.com/XTLS/Xray-core/releases/download/v25.9.5/Xray-linux-64.zip
           unzip -o cores/xray.zip -d cores/
           chmod +x cores/xray
 
