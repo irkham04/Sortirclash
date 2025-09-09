@@ -10,9 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Checkout repo
       - name: Checkout repo
         uses: actions/checkout@v3
 
+      # 2. Setup Clash Core
       - name: Setup Clash Core
         run: |
           mkdir -p cores
@@ -20,22 +22,26 @@ jobs:
           gunzip -f cores/clash_meta.gz
           chmod +x cores/clash_meta
 
+      # 3. Setup Python
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
 
+      # 4. Install dependencies
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install requests
 
+      # 5. Run checker.py
       - name: Run accurate checker
         run: |
           python checker.py
 
+      # 6. Upload hasil server aktif (gunakan v4)
       - name: Upload active servers
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: active-servers
           path: results/hasil.txt
