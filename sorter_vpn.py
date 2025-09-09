@@ -7,12 +7,11 @@ import json
 import os
 
 SUB_URL_FILE = "sub_urls.txt"
-OUTPUT_FILE = "./akun_aktif.txt"  # pastikan root repo
-TIMEOUT = 15  # detik
+OUTPUT_FILE = os.path.join(os.getcwd(), "akun_aktif.txt")  # pastikan di root repo
+TIMEOUT = 15
 MAX_THREADS = 20
 
 def fetch_accounts(url):
-    """Download akun dari sub URL"""
     try:
         resp = requests.get(url, timeout=TIMEOUT)
         resp.raise_for_status()
@@ -34,14 +33,13 @@ def fetch_accounts(url):
         return []
 
 def parse_host_port(account):
-    """Ambil host dan port dari akun"""
     try:
         if account.startswith("vless://") or account.startswith("trojan://"):
             body = account.split('@')[-1]
             host_port = body.split('?')[0]
             host, port = host_port.split(':')
             return host, int(port)
-        elif account.startswith("vmess://") or account.startswith("{"):  # VMess decode JSON
+        elif account.startswith("vmess://") or account.startswith("{"):
             data = json.loads(account)
             return data.get("add"), int(data.get("port"))
         elif account.startswith("ss://"):
@@ -56,18 +54,16 @@ def parse_host_port(account):
         return None, None
 
 def test_connect(account):
-    """Cek koneksi ke host:port"""
     host, port = parse_host_port(account)
     if not host or not port:
         return False
     try:
         with socket.create_connection((host, port), timeout=TIMEOUT):
             return True
-    except Exception as e:
+    except Exception:
         return False
 
 def main():
-    # baca daftar sub URL
     if not os.path.exists(SUB_URL_FILE):
         print(f"[!] File {SUB_URL_FILE} tidak ditemukan")
         return
@@ -98,12 +94,13 @@ def main():
             except Exception as e:
                 print(f"[EXCEPT] {acc[:50]}: {e}")
 
-    # simpan file
+    # Simpan file selalu ada
     with open(OUTPUT_FILE, "w") as f:
         for acc in aktif_accounts:
             f.write(acc + "\n")
 
     print(f"[+] Akun aktif tersimpan di {OUTPUT_FILE}: {len(aktif_accounts)} akun")
+    print(f"[DEBUG] File ada: {os.path.exists(OUTPUT_FILE)}")
 
 if __name__ == "__main__":
     main()
