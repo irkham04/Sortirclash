@@ -16,7 +16,7 @@ RETRY_CONN = 3
 RETRY_PING = 3
 RETRY_IP = 2
 TIMEOUT_CONN = 20
-CORE_PATH = "./cores/mihomo"  # gunakan MiHoYo Core
+CORE_PATH = "./cores/xray"  # path ke Xray Core
 
 def fetch_servers_from_url(url):
     try:
@@ -65,7 +65,8 @@ def average_ping(ip):
 def test_server(server):
     for attempt in range(RETRY_CONN):
         try:
-            cmd = [CORE_PATH, "-d", ".", "--try-test", server]
+            # Test server via Xray Core
+            cmd = [CORE_PATH, "test", server]  # sesuaikan dengan CLI Xray versi terbaru
             proc = subprocess.run(cmd, capture_output=True, text=True, timeout=TIMEOUT_CONN)
 
             if proc.returncode == 0:
@@ -80,9 +81,13 @@ def test_server(server):
                     except:
                         pass
                 return f"{server} | OK ✅ | {ping_ms} | {country}"
-        except Exception:
+            else:
+                print(proc.stdout)
+                print(proc.stderr)
+        except Exception as e:
+            print(f"Error test server {server}: {e}")
             continue
-    return None  # gagal semua percobaan
+    return None
 
 # Ambil semua server dari sub-url
 servers = []
