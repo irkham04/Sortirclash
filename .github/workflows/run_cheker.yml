@@ -20,11 +20,11 @@ jobs:
       - name: Run VPN Sorter
         run: python sorter_vpn.py
 
-      - name: List files for debug
-        run: ls -l
+      - name: Debug: list files
+        run: ls -l ${{ github.workspace }}
 
       - name: Upload akun aktif
         uses: actions/upload-artifact@v4
         with:
           name: akun_aktif
-          path: akun_aktif.txt
+          path: ${{ github.workspace }}/akun_aktif.txt
