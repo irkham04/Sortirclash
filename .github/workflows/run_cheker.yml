@@ -1,4 +1,4 @@
-name: Run Accurate Server Checker (MiHoYo Core)
+name: Run Accurate Server Checker (Xray Core)
 
 on:
   workflow_dispatch:
@@ -14,12 +14,12 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Setup MiHoYo Core
+      - name: Setup Xray Core
         run: |
           mkdir -p cores
-          wget -O cores/mihomo.gz https://github.com/MetaCubeX/mihomo/releases/download/v1.19.13/mihomo-linux-amd64-compatible-v1.19.13.gz
-          gunzip -f cores/mihomo.gz
-          chmod +x cores/mihomo
+          wget -O cores/xray.zip https://github.com/XTLS/Xray-core/releases/download/v1.9.6/Xray-linux-64.zip
+          unzip -o cores/xray.zip -d cores/
+          chmod +x cores/xray
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -30,6 +30,11 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install requests
+
+      - name: Debug repo content
+        run: |
+          pwd
+          ls -R
 
       - name: Run accurate checker
         run: |
