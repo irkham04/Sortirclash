@@ -1,14 +1,13 @@
 name: Sorter VPN Aktif
 
 on:
-  workflow_dispatch:  # bisa dijalankan manual dari GitHub
+  workflow_dispatch:
 
 jobs:
   sort:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -21,14 +20,11 @@ jobs:
       - name: Run VPN Sorter
         run: python sorter_vpn.py
 
-      - name: Debug: show current directory
-        run: pwd
-
-      - name: Debug: list files
-        run: ls -l ${{ github.workspace }}
+      - name: List files for debug
+        run: ls -l
 
       - name: Upload akun aktif
         uses: actions/upload-artifact@v4
         with:
           name: akun_aktif
-          path: ${{ github.workspace }}/akun_aktif.txt
+          path: akun_aktif.txt
