@@ -1,24 +1,13 @@
-name: Run Accurate Server Checker (Xray Core v25)
+name: Sorter VPN Aktif
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 */6 * * *'  # opsional otomatis tiap 6 jam
 
 jobs:
-  check:
+  sort:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-
-      - name: Setup Xray Core v25.9.5
-        run: |
-          mkdir -p cores
-          wget -O cores/xray.zip https://github.com/XTLS/Xray-core/releases/download/v25.9.5/Xray-linux-64.zip
-          unzip -o cores/xray.zip -d cores/
-          chmod +x cores/xray
+      - uses: actions/checkout@v3
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -26,21 +15,13 @@ jobs:
           python-version: "3.10"
 
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install requests
+        run: pip install requests
 
-      - name: Debug repo content
-        run: |
-          pwd
-          ls -R
+      - name: Run VPN Sorter
+        run: python sorter_vpn.py
 
-      - name: Run accurate checker
-        run: |
-          python checker.py
-
-      - name: Upload active servers
-        uses: actions/upload-artifact@v4
+      - name: Upload akun aktif
+        uses: actions/upload-artifact@v3
         with:
-          name: active-servers
-          path: results/hasil.txt
+          name: akun_aktif
+          path: akun_aktif.txt
